@@ -25,3 +25,13 @@ dependencies {
     implementation 'com.github.Brook007:StateLayout:1.0.0'
 }
 ```
+
+## 预览
+
+[![](/picture/preview.gif)](https://github.com/Brook007)
+
+## Demo下载
+<a href="/demo/demo.apk" download="Demo.apk" alt="Demo.apk">Demo.apk</a>
+
+## 更新预告
+- 嵌套滚动CoordinatorLayout支持
