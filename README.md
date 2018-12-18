@@ -28,7 +28,7 @@ dependencies {
 
 ## 预览
 
-[![](/picture/preview.gif)](https://github.com/Brook007)
+[![](/picture/preview.gif)](https://github.com/Brook007/StateLayout)
 
 ## Demo下载
 <a href="/demo/demo.apk" download="Demo.apk" alt="Demo.apk">Demo.apk</a>
