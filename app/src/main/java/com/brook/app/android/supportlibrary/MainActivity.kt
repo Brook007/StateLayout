@@ -1,4 +1,4 @@
-package com.brook.app.android.supportlibrary.statelayout
+package com.brook.app.android.supportlibrary
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle

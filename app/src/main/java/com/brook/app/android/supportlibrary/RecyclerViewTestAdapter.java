@@ -1,4 +1,4 @@
-package com.brook.app.android.supportlibrary.statelayout;
+package com.brook.app.android.supportlibrary;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
