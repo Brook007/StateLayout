@@ -182,11 +182,13 @@ public class StateLayout extends FrameLayout {
      * @param view
      */
     public void setNoNetworkView(View view) {
-        StateLayout.LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
-        if (layoutParams == null) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (layoutParams != null && layoutParams instanceof LayoutParams) {
+            ((LayoutParams) layoutParams).stateFlag = NO_NETWORK;
+        } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            ((LayoutParams) layoutParams).stateFlag = NO_NETWORK;
         }
-        layoutParams.stateFlag = NO_NETWORK;
         view.setLayoutParams(layoutParams);
         view.setVisibility(View.GONE);
         this.noNetwork = view;
@@ -212,11 +214,13 @@ public class StateLayout extends FrameLayout {
     }
 
     public void setNoDataView(View view) {
-        StateLayout.LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
-        if (layoutParams == null) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (layoutParams != null && layoutParams instanceof LayoutParams) {
+            ((LayoutParams) layoutParams).stateFlag = NO_DATA;
+        } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            ((LayoutParams) layoutParams).stateFlag = NO_DATA;
         }
-        layoutParams.stateFlag = NO_DATA;
         view.setLayoutParams(layoutParams);
         view.setVisibility(View.GONE);
         this.noData = view;
@@ -250,11 +254,13 @@ public class StateLayout extends FrameLayout {
      * @param view
      */
     public void setErrorView(View view) {
-        StateLayout.LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
-        if (layoutParams == null) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (layoutParams != null && layoutParams instanceof LayoutParams) {
+            ((LayoutParams) layoutParams).stateFlag = ERROR;
+        } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            ((LayoutParams) layoutParams).stateFlag = ERROR;
         }
-        layoutParams.stateFlag = ERROR;
         view.setLayoutParams(layoutParams);
         view.setVisibility(View.GONE);
         this.error = view;
@@ -285,11 +291,13 @@ public class StateLayout extends FrameLayout {
      * @param view
      */
     public void setOnLoadingView(View view) {
-        StateLayout.LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
-        if (layoutParams == null) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (layoutParams != null && layoutParams instanceof LayoutParams) {
+            ((LayoutParams) layoutParams).stateFlag = LOADING;
+        } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            ((LayoutParams) layoutParams).stateFlag = LOADING;
         }
-        layoutParams.stateFlag = LOADING;
         view.setLayoutParams(layoutParams);
         view.setVisibility(View.GONE);
         this.onLoading = view;
@@ -320,11 +328,13 @@ public class StateLayout extends FrameLayout {
      * @param view
      */
     public void setSuccessView(View view) {
-        StateLayout.LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
-        if (layoutParams == null) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (layoutParams != null && layoutParams instanceof LayoutParams) {
+            ((LayoutParams) layoutParams).stateFlag = SUCCESS;
+        } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            ((LayoutParams) layoutParams).stateFlag = SUCCESS;
         }
-        layoutParams.stateFlag = SUCCESS;
         view.setLayoutParams(layoutParams);
         view.setVisibility(View.GONE);
         this.success = view;
