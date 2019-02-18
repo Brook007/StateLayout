@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
-import com.brook.app.android.supportlibrary.views.StateLayout
+import com.brook.app.android.supportlibrary.view.StateLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 

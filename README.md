@@ -5,7 +5,7 @@
 [![](https://img.shields.io/badge/Platform-Android-brightgreen.svg)](https://github.com/Brook007/StateLayout)
 [![](https://img.shields.io/badge/API_Live-14+-brightgreen.svg)](https://github.com/Brook007/StateLayout)
 [![](https://img.shields.io/badge/License-Apache_2-brightgreen.svg)](https://github.com/Brook007/StateLayout/blob/master/LICENSE)
-[![](https://img.shields.io/badge/%E4%BD%9C%E8%80%85-Brook007-orange.svg)](https://github.com/Brook007)
+[![](https://img.shields.io/badge/Author-Brook007-orange.svg)](https://github.com/Brook007)
 
 
 ## 引入依赖

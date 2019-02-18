@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.brook.app.android.supportlibrary.views;
+package com.brook.app.android.supportlibrary.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

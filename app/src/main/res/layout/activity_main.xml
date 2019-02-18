@@ -48,7 +48,7 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <com.brook.app.android.supportlibrary.views.StateLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.brook.app.android.supportlibrary.view.StateLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,6 +58,6 @@
         app:onLoadingView="@layout/layout_state_loading"
         app:onNoNetworkView="@layout/layout_state_no_network">
 
-    </com.brook.app.android.supportlibrary.views.StateLayout>
+    </com.brook.app.android.supportlibrary.view.StateLayout>
 
 </LinearLayout>
