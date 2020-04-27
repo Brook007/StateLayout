@@ -37,7 +37,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 
-import com.brook.app.android.supportlibrary.statelayout.R;
+import com.brook.app.android.statelayout.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
