@@ -48,16 +48,16 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <com.brook.app.android.supportlibrary.view.StateLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.brook.app.android.view.StateLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:default_state="loading"
-        app:noDataView="@layout/layout_state_no_data"
+        app:default_state="LOADING"
+        app:onEmptyView="@layout/layout_state_no_data"
         app:onErrorView="@layout/layout_state_error"
         app:onLoadingView="@layout/layout_state_loading"
         app:onNoNetworkView="@layout/layout_state_no_network">
 
-    </com.brook.app.android.supportlibrary.view.StateLayout>
+    </com.brook.app.android.view.StateLayout>
 
 </LinearLayout>

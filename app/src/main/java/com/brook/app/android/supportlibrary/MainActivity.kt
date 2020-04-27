@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
-import com.brook.app.android.supportlibrary.view.StateLayout
+import com.brook.app.android.view.StateLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -27,19 +27,19 @@ class MainActivity : AppCompatActivity() {
         var button = view as Button
         when (button.text.toString()) {
             "成功" -> {
-                layout.state = StateLayout.SUCCESS
+                layout.setState(StateLayout.SUCCESS)
             }
             "加载中" -> {
-                layout.state = StateLayout.LOADING
+                layout.setState(StateLayout.LOADING)
             }
             "无网络" -> {
-                layout.state = StateLayout.NO_NETWORK
+                layout.setState(StateLayout.NO_NETWORK)
             }
             "无数据" -> {
-                layout.state = StateLayout.NO_DATA
+                layout.setState(StateLayout.NO_DATA)
             }
             "无服务" -> {
-                layout.state = StateLayout.ERROR
+                layout.setState(StateLayout.ERROR)
             }
 
         }

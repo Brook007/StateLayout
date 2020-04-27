@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.brook.app.android.supportlibrary.view;
+package com.brook.app.android.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.AttrRes;
@@ -47,14 +48,14 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class StateLayout extends FrameLayout {
 
-    private View noNetwork;
-    private View error;
-    private View noData;
-    private View success;
-    private View onLoading;
+    private View mNoNetworkView;
+    private View mErrorView;
+    private View mNoDataView;
+    private View mSuccessView;
+    private View mOnLoadingView;
 
     // 当前状态
-    private int state = DEFAULT_STATE;
+    private int mState = DEFAULT_STATE;
 
     // 空数据
     public static final int NO_DATA = 5;
@@ -78,7 +79,7 @@ public class StateLayout extends FrameLayout {
 
     private boolean isFirst = true;
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
 
     public StateLayout(@NonNull Context context) {
         this(context, null);
@@ -92,8 +93,8 @@ public class StateLayout extends FrameLayout {
         super(context, attrs, defStyleAttr);
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.StateLayout);
-            state = typedArray.getInt(R.styleable.StateLayout_default_state, LOADING);
-            int noDataView = typedArray.getResourceId(R.styleable.StateLayout_noDataView, -1);
+            mState = typedArray.getInt(R.styleable.StateLayout_default_state, LOADING);
+            int noDataView = typedArray.getResourceId(R.styleable.StateLayout_onEmptyView, -1);
             int onLoadingView = typedArray.getResourceId(R.styleable.StateLayout_onLoadingView, -1);
             int onErrorView = typedArray.getResourceId(R.styleable.StateLayout_onErrorView, -1);
             int onNoNetworkView = typedArray.getResourceId(R.styleable.StateLayout_onNoNetworkView, -1);
@@ -113,46 +114,14 @@ public class StateLayout extends FrameLayout {
             }
             typedArray.recycle();
         }
+        mHandler = new Handler(Looper.getMainLooper());
     }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View child = getChildAt(i);
-            ViewGroup.LayoutParams params = child.getLayoutParams();
-            if (params instanceof StateLayout.LayoutParams) {
-                StateLayout.LayoutParams layoutParams = (LayoutParams) params;
-                child.setVisibility(View.GONE);
-                switch (layoutParams.stateFlag) {
-                    case NO_DATA:
-                        noData = child;
-                        break;
-                    case LOADING:
-                        onLoading = child;
-                        break;
-                    case SUCCESS:
-                        success = child;
-                        break;
-                    case ERROR:
-                        error = child;
-                        break;
-                    case NO_NETWORK:
-                        noNetwork = child;
-                        break;
-                }
-            }
-        }
-        setState(state);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (isFirst) {
-            setState(state);
+            setState(mState);
             isFirst = false;
         }
     }
@@ -184,15 +153,13 @@ public class StateLayout extends FrameLayout {
     public void setNoNetworkView(View view) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
-            ((LayoutParams) layoutParams).stateFlag = NO_NETWORK;
+            ((LayoutParams) layoutParams).mStateFlag = NO_NETWORK;
         } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            ((LayoutParams) layoutParams).stateFlag = NO_NETWORK;
+            ((LayoutParams) layoutParams).mStateFlag = NO_NETWORK;
         }
         view.setLayoutParams(layoutParams);
-        view.setVisibility(View.GONE);
-        this.noNetwork = view;
-        this.addView(noNetwork);
+        this.mNoNetworkView = view;
     }
 
     /**
@@ -216,15 +183,13 @@ public class StateLayout extends FrameLayout {
     public void setNoDataView(View view) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
-            ((LayoutParams) layoutParams).stateFlag = NO_DATA;
+            ((LayoutParams) layoutParams).mStateFlag = NO_DATA;
         } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            ((LayoutParams) layoutParams).stateFlag = NO_DATA;
+            ((LayoutParams) layoutParams).mStateFlag = NO_DATA;
         }
         view.setLayoutParams(layoutParams);
-        view.setVisibility(View.GONE);
-        this.noData = view;
-        this.addView(noData);
+        this.mNoDataView = view;
     }
 
 
@@ -256,15 +221,13 @@ public class StateLayout extends FrameLayout {
     public void setErrorView(View view) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
-            ((LayoutParams) layoutParams).stateFlag = ERROR;
+            ((LayoutParams) layoutParams).mStateFlag = ERROR;
         } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            ((LayoutParams) layoutParams).stateFlag = ERROR;
+            ((LayoutParams) layoutParams).mStateFlag = ERROR;
         }
         view.setLayoutParams(layoutParams);
-        view.setVisibility(View.GONE);
-        this.error = view;
-        this.addView(error);
+        this.mErrorView = view;
     }
 
     /**
@@ -293,15 +256,13 @@ public class StateLayout extends FrameLayout {
     public void setOnLoadingView(View view) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
-            ((LayoutParams) layoutParams).stateFlag = LOADING;
+            ((LayoutParams) layoutParams).mStateFlag = LOADING;
         } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            ((LayoutParams) layoutParams).stateFlag = LOADING;
+            ((LayoutParams) layoutParams).mStateFlag = LOADING;
         }
         view.setLayoutParams(layoutParams);
-        view.setVisibility(View.GONE);
-        this.onLoading = view;
-        this.addView(onLoading);
+        this.mOnLoadingView = view;
     }
 
     /**
@@ -330,15 +291,13 @@ public class StateLayout extends FrameLayout {
     public void setSuccessView(View view) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
-            ((LayoutParams) layoutParams).stateFlag = SUCCESS;
+            ((LayoutParams) layoutParams).mStateFlag = SUCCESS;
         } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            ((LayoutParams) layoutParams).stateFlag = SUCCESS;
+            ((LayoutParams) layoutParams).mStateFlag = SUCCESS;
         }
         view.setLayoutParams(layoutParams);
-        view.setVisibility(View.GONE);
-        this.success = view;
-        this.addView(success);
+        this.mSuccessView = view;
     }
 
     /**
@@ -352,15 +311,15 @@ public class StateLayout extends FrameLayout {
         if (newView == null) {
             return;
         }
-        View viewState = getViewByState(StateLayout.this.state);
+        View viewState = getViewByState(this.mState);
 
-        if (viewState != null && StateLayout.this.state != newState) {
+        if (viewState != null && this.mState != newState) {
             viewState.clearAnimation();
-            viewState.setVisibility(View.GONE);
         }
+        removeAllViews();
         newView.clearAnimation();
-        newView.setVisibility(View.VISIBLE);
-        StateLayout.this.state = newState;
+        addView(newView);
+        this.mState = newState;
     }
 
     /**
@@ -396,36 +355,26 @@ public class StateLayout extends FrameLayout {
     public View getViewByState(@LoadState int state) {
         switch (state) {
             case NO_DATA:
-                return noData;
+                return mNoDataView;
             case LOADING:
-                return onLoading;
+                return mOnLoadingView;
             case SUCCESS:
-                return success;
+                return mSuccessView;
             case ERROR:
-                return error;
+                return mErrorView;
             case NO_NETWORK:
-                return noNetwork;
+                return mNoNetworkView;
             default:
                 return null;
         }
     }
-
-    //    @Override
-    //    public void addView(View child) {
-    //        StateLayout.LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
-    //        if (layoutParams == null || layoutParams.stateFlag == 0) {
-    //            throw new IllegalStateException("请设置LayoutParams");
-    //        }
-    //        //        goneAllChildView();
-    //        super.addView(child);
-    //    }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         Log.d("StateLayout", "onRestoreInstanceState");
         SavedState parcelable = (SavedState) state;
         super.onRestoreInstanceState(BaseSavedState.EMPTY_STATE);
-        this.state = parcelable.state;
+        this.mState = parcelable.mState;
     }
 
     /**
@@ -440,13 +389,13 @@ public class StateLayout extends FrameLayout {
     protected Parcelable onSaveInstanceState() {
         Parcelable parcelable = super.onSaveInstanceState();
         SavedState savedState = new SavedState(parcelable);
-        savedState.state = this.state;
+        savedState.mState = this.mState;
         return savedState;
     }
 
     public static final class SavedState extends BaseSavedState {
 
-        int state;
+        int mState;
 
         protected SavedState(Parcelable superState) {
             super(superState);
@@ -454,13 +403,13 @@ public class StateLayout extends FrameLayout {
 
         protected SavedState(Parcel source) {
             super(source);
-            state = source.readInt();
+            mState = source.readInt();
         }
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
-            dest.writeInt(state);
+            dest.writeInt(mState);
         }
 
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
@@ -483,7 +432,7 @@ public class StateLayout extends FrameLayout {
      * @return
      */
     public int getState() {
-        return this.state;
+        return this.mState;
     }
 
 
@@ -494,7 +443,7 @@ public class StateLayout extends FrameLayout {
 
     public static class LayoutParams extends FrameLayout.LayoutParams {
 
-        private int stateFlag;
+        private int mStateFlag;
 
         public LayoutParams(int width, int height) {
             super(width, height);
@@ -503,16 +452,16 @@ public class StateLayout extends FrameLayout {
         public LayoutParams(@NonNull Context context, @Nullable AttributeSet attrs) {
             super(context, attrs);
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.StateLayout_Layout);
-            stateFlag = array.getInt(R.styleable.StateLayout_Layout_view_state, 0);
+            mStateFlag = array.getInt(R.styleable.StateLayout_Layout_view_state, 0);
             array.recycle();
         }
 
         public void setState(@LoadState int state) {
-            this.stateFlag = state;
+            this.mStateFlag = state;
         }
 
         public int getState() {
-            return stateFlag;
+            return mStateFlag;
         }
     }
 

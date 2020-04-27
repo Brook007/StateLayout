@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (c) 2016-present, Brook007 Contributors.
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -16,13 +15,13 @@
 <resources>
     <declare-styleable name="StateLayout">
         <attr name="default_state" format="enum">
-            <enum name="empty" value="0" />
-            <enum name="loading" value="1" />
-            <enum name="data" value="2" />
-            <enum name="error" value="3" />
-            <enum name="no_network" value="4" />
+            <enum name="EMPTY" value="0" />
+            <enum name="LOADING" value="1" />
+            <enum name="SUCCESS" value="2" />
+            <enum name="ERROR" value="3" />
+            <enum name="NO_NETWORK" value="4" />
         </attr>
-        <attr name="noDataView" format="reference" />
+        <attr name="onEmptyView" format="reference" />
         <attr name="onLoadingView" format="reference" />
         <attr name="onErrorView" format="reference" />
         <attr name="onNoNetworkView" format="reference" />
@@ -30,11 +29,11 @@
 
     <declare-styleable name="StateLayout_Layout">
         <attr name="view_state" format="enum">
-            <enum name="empty" value="0" />
-            <enum name="loading" value="1" />
-            <enum name="data" value="2" />
-            <enum name="error" value="3" />
-            <enum name="no_network" value="4" />
+            <enum name="EMPTY" value="0" />
+            <enum name="LOADING" value="1" />
+            <enum name="SUCCESS" value="2" />
+            <enum name="ERROR" value="3" />
+            <enum name="NO_NETWORK" value="4" />
         </attr>
     </declare-styleable>
 </resources>
