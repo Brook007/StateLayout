@@ -36,7 +36,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-
 import com.brook.app.android.statelayout.R;
 
 import java.lang.annotation.Retention;
@@ -68,8 +67,9 @@ public class StateLayout extends FrameLayout {
     // 无网络
     public static final int NO_NETWORK = 4;
 
+    private static final int CHANGE_STATE = 0x100;
 
-    @IntDef({EMPTY, LOADING, SUCCESS, ERROR, NO_NETWORK})
+    @IntDef({ EMPTY, LOADING, SUCCESS, ERROR, NO_NETWORK })
     @Retention(RetentionPolicy.SOURCE)
     public @interface LoadState {
 
@@ -122,46 +122,39 @@ public class StateLayout extends FrameLayout {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        if (isFirst) {
-            setState(mState, false);
-            isFirst = false;
-        }
-    }
-
-    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View child = getChildAt(i);
-            ViewGroup.LayoutParams params = child.getLayoutParams();
-            if (params instanceof LayoutParams) {
-                LayoutParams layoutParams = (LayoutParams) params;
-                child.setVisibility(View.GONE);
-                switch (layoutParams.mStateFlag) {
-                    case EMPTY:
-                        mEmptyView = child;
-                        break;
-                    case LOADING:
-                        mOnLoadingView = child;
-                        break;
-                    case SUCCESS:
-                        mSuccessView = child;
-                        break;
-                    case ERROR:
-                        mErrorView = child;
-                        break;
-                    case NO_NETWORK:
-                        mNoNetworkView = child;
-                        break;
+        if (isFirst) {
+            for (int i = 0; i < childCount; i++) {
+                View child = getChildAt(i);
+                ViewGroup.LayoutParams params = child.getLayoutParams();
+                if (params instanceof LayoutParams) {
+                    LayoutParams layoutParams = (LayoutParams) params;
+                    child.setVisibility(View.GONE);
+                    switch (layoutParams.mStateFlag) {
+                        case EMPTY:
+                            mEmptyView = child;
+                            break;
+                        case LOADING:
+                            mOnLoadingView = child;
+                            break;
+                        case SUCCESS:
+                            mSuccessView = child;
+                            break;
+                        case ERROR:
+                            mErrorView = child;
+                            break;
+                        case NO_NETWORK:
+                            mNoNetworkView = child;
+                            break;
+                    }
                 }
             }
+            isFirst = false;
+            setState(mState, false);
         }
-        setState(mState, false);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
-
 
     /**
      * 设置无网络时的视图
@@ -191,7 +184,8 @@ public class StateLayout extends FrameLayout {
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
             ((LayoutParams) layoutParams).mStateFlag = NO_NETWORK;
         } else {
-            layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
             ((LayoutParams) layoutParams).mStateFlag = NO_NETWORK;
         }
         view.setLayoutParams(layoutParams);
@@ -223,7 +217,8 @@ public class StateLayout extends FrameLayout {
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
             ((LayoutParams) layoutParams).mStateFlag = EMPTY;
         } else {
-            layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
             ((LayoutParams) layoutParams).mStateFlag = EMPTY;
         }
         view.setLayoutParams(layoutParams);
@@ -241,7 +236,6 @@ public class StateLayout extends FrameLayout {
         setErrorView(findViewById(resId));
     }
 
-
     /**
      * 设置加载错误时的视图
      *
@@ -250,7 +244,6 @@ public class StateLayout extends FrameLayout {
     public void setErrorView(@LayoutRes int resId) {
         setErrorView(LayoutInflater.from(getContext()).inflate(resId, this, false));
     }
-
 
     /**
      * 设置错误视图
@@ -262,7 +255,8 @@ public class StateLayout extends FrameLayout {
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
             ((LayoutParams) layoutParams).mStateFlag = ERROR;
         } else {
-            layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
             ((LayoutParams) layoutParams).mStateFlag = ERROR;
         }
         view.setLayoutParams(layoutParams);
@@ -300,7 +294,8 @@ public class StateLayout extends FrameLayout {
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
             ((LayoutParams) layoutParams).mStateFlag = LOADING;
         } else {
-            layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
             ((LayoutParams) layoutParams).mStateFlag = LOADING;
         }
         view.setLayoutParams(layoutParams);
@@ -337,7 +332,8 @@ public class StateLayout extends FrameLayout {
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
             ((LayoutParams) layoutParams).mStateFlag = SUCCESS;
         } else {
-            layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
             ((LayoutParams) layoutParams).mStateFlag = SUCCESS;
         }
         view.setLayoutParams(layoutParams);
@@ -365,11 +361,9 @@ public class StateLayout extends FrameLayout {
 
         if (viewState != null && this.mState != newState) {
             viewState.clearAnimation();
-            // removeAllViews();
             viewState.setVisibility(View.GONE);
         }
         newView.clearAnimation();
-        //addView(newView);
         newView.setVisibility(View.VISIBLE);
         this.mState = newState;
         if (requestLayout) {
@@ -378,18 +372,29 @@ public class StateLayout extends FrameLayout {
     }
 
     /**
+     * 延时，并强制更新状态
+     *
+     * @param newState    新的状态
+     * @param delayMillis 延时毫秒数
+     */
+    public void setStateDelayed(@LoadState final int newState, long delayMillis) {
+        setStateDelayed(newState, delayMillis, true);
+    }
+
+    /**
      * 延时更新状态
      *
-     * @param newState
-     * @param delayed
+     * @param newState      新的状态
+     * @param delayMillis   延时毫秒数
+     * @param requestLayout 强制刷新布局
      */
-    public void setStateDelayed(@LoadState final int newState, long delayed) {
+    public void setStateDelayed(@LoadState final int newState, long delayMillis, final boolean requestLayout) {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setState(newState, false);
+                setState(newState, requestLayout);
             }
-        }, delayed);
+        }, delayMillis);
     }
 
     /**
@@ -433,9 +438,9 @@ public class StateLayout extends FrameLayout {
     }
 
     /**
-     * 保存View的状态，返回的对象需要实现Parcelable接口并且继承自View#AbsSavedState类，
-     * 并带有public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>()属性
-     * 否则onRestoreInstanceState接受的数据无法转为对应的类型
+     * 保存View的状态，返回的对象需要实现Parcelable接口并且继承自View#AbsSavedState类， 并带有public static
+     * final Parcelable.Creator<SavedState> CREATOR = new
+     * Parcelable.Creator<SavedState>()属性 否则onRestoreInstanceState接受的数据无法转为对应的类型
      *
      * @return 返回值必须实现Parcelable接口并且继承自View#AbsSavedState类，否恢复状态异常
      */
@@ -490,7 +495,6 @@ public class StateLayout extends FrameLayout {
         return this.mState;
     }
 
-
     @Override
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new LayoutParams(getContext(), attrs);
@@ -519,7 +523,6 @@ public class StateLayout extends FrameLayout {
             return mStateFlag;
         }
     }
-
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
