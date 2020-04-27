@@ -125,7 +125,7 @@ public class StateLayout extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (isFirst) {
-            setState(mState);
+            setState(mState, false);
             isFirst = false;
         }
     }
@@ -158,7 +158,7 @@ public class StateLayout extends FrameLayout {
                 }
             }
         }
-        setState(mState);
+        setState(mState, false);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
@@ -352,6 +352,10 @@ public class StateLayout extends FrameLayout {
      * @param newState
      */
     public void setState(@LoadState final int newState) {
+        setState(newState, true);
+    }
+
+    public void setState(@LoadState final int newState, boolean requestLayout) {
         mHandler.removeCallbacksAndMessages(null);
         View newView = getViewByState(newState);
         if (newView == null) {
@@ -361,13 +365,16 @@ public class StateLayout extends FrameLayout {
 
         if (viewState != null && this.mState != newState) {
             viewState.clearAnimation();
-//            removeAllViews();
+            // removeAllViews();
             viewState.setVisibility(View.GONE);
         }
         newView.clearAnimation();
         //addView(newView);
         newView.setVisibility(View.VISIBLE);
         this.mState = newState;
+        if (requestLayout) {
+            requestLayout();
+        }
     }
 
     /**
@@ -380,7 +387,7 @@ public class StateLayout extends FrameLayout {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setState(newState);
+                setState(newState, false);
             }
         }, delayed);
     }
