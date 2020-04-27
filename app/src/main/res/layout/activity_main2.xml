@@ -5,13 +5,6 @@
     android:orientation="vertical">
 
 
-    <Button
-        android:onClick="xml"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="在xml使用" />
-
-
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -59,11 +52,32 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:default_state="LOADING"
-        app:onEmptyView="@layout/layout_state_no_data"
-        app:onErrorView="@layout/layout_state_error"
-        app:onLoadingView="@layout/layout_state_loading"
-        app:onNoNetworkView="@layout/layout_state_no_network">
+        app:default_state="LOADING">
+
+        <include
+            layout="@layout/layout_state_no_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:view_state="EMPTY" />
+
+        <include
+            layout="@layout/layout_state_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:view_state="ERROR" />
+
+        <include
+            layout="@layout/layout_state_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:view_state="LOADING" />
+
+        <include
+            layout="@layout/layout_state_no_network"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:view_state="NO_NETWORK" />
+
 
     </com.brook.app.android.view.StateLayout>
 

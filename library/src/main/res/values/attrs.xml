@@ -15,25 +15,26 @@
 <resources>
     <declare-styleable name="StateLayout">
         <attr name="default_state" format="enum">
-            <enum name="EMPTY" value="0" />
             <enum name="LOADING" value="1" />
             <enum name="SUCCESS" value="2" />
             <enum name="ERROR" value="3" />
             <enum name="NO_NETWORK" value="4" />
+            <enum name="EMPTY" value="5" />
         </attr>
         <attr name="onEmptyView" format="reference" />
         <attr name="onLoadingView" format="reference" />
         <attr name="onErrorView" format="reference" />
         <attr name="onNoNetworkView" format="reference" />
+        <attr name="onSuccessView" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="StateLayout_Layout">
         <attr name="view_state" format="enum">
-            <enum name="EMPTY" value="0" />
             <enum name="LOADING" value="1" />
             <enum name="SUCCESS" value="2" />
             <enum name="ERROR" value="3" />
             <enum name="NO_NETWORK" value="4" />
+            <enum name="EMPTY" value="5" />
         </attr>
     </declare-styleable>
 </resources>

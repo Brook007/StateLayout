@@ -50,7 +50,7 @@ public class StateLayout extends FrameLayout {
 
     private View mNoNetworkView;
     private View mErrorView;
-    private View mNoDataView;
+    private View mEmptyView;
     private View mSuccessView;
     private View mOnLoadingView;
 
@@ -58,7 +58,7 @@ public class StateLayout extends FrameLayout {
     private int mState = DEFAULT_STATE;
 
     // 空数据
-    public static final int NO_DATA = 5;
+    public static final int EMPTY = 5;
     // 加载中
     public static final int LOADING = 1;
     // 加载成功
@@ -69,7 +69,7 @@ public class StateLayout extends FrameLayout {
     public static final int NO_NETWORK = 4;
 
 
-    @IntDef({NO_DATA, LOADING, SUCCESS, ERROR, NO_NETWORK})
+    @IntDef({EMPTY, LOADING, SUCCESS, ERROR, NO_NETWORK})
     @Retention(RetentionPolicy.SOURCE)
     public @interface LoadState {
 
@@ -94,14 +94,15 @@ public class StateLayout extends FrameLayout {
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.StateLayout);
             mState = typedArray.getInt(R.styleable.StateLayout_default_state, LOADING);
-            int noDataView = typedArray.getResourceId(R.styleable.StateLayout_onEmptyView, -1);
+            int emptyView = typedArray.getResourceId(R.styleable.StateLayout_onEmptyView, -1);
             int onLoadingView = typedArray.getResourceId(R.styleable.StateLayout_onLoadingView, -1);
             int onErrorView = typedArray.getResourceId(R.styleable.StateLayout_onErrorView, -1);
             int onNoNetworkView = typedArray.getResourceId(R.styleable.StateLayout_onNoNetworkView, -1);
+            int onSuccessView = typedArray.getResourceId(R.styleable.StateLayout_onSuccessView, -1);
 
             LayoutInflater from = LayoutInflater.from(context);
-            if (noDataView > 0) {
-                setNoDataView(from.inflate(noDataView, this, false));
+            if (emptyView > 0) {
+                setEmptyView(from.inflate(emptyView, this, false));
             }
             if (onLoadingView > 0) {
                 setOnLoadingView(from.inflate(onLoadingView, this, false));
@@ -111,6 +112,9 @@ public class StateLayout extends FrameLayout {
             }
             if (onNoNetworkView > 0) {
                 setNoNetworkView(from.inflate(onNoNetworkView, this, false));
+            }
+            if (onSuccessView > 0) {
+                setSuccessView(from.inflate(onSuccessView, this, false));
             }
             typedArray.recycle();
         }
@@ -124,6 +128,38 @@ public class StateLayout extends FrameLayout {
             setState(mState);
             isFirst = false;
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View child = getChildAt(i);
+            ViewGroup.LayoutParams params = child.getLayoutParams();
+            if (params instanceof LayoutParams) {
+                LayoutParams layoutParams = (LayoutParams) params;
+                child.setVisibility(View.GONE);
+                switch (layoutParams.mStateFlag) {
+                    case EMPTY:
+                        mEmptyView = child;
+                        break;
+                    case LOADING:
+                        mOnLoadingView = child;
+                        break;
+                    case SUCCESS:
+                        mSuccessView = child;
+                        break;
+                    case ERROR:
+                        mErrorView = child;
+                        break;
+                    case NO_NETWORK:
+                        mNoNetworkView = child;
+                        break;
+                }
+            }
+        }
+        setState(mState);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
 
@@ -159,7 +195,9 @@ public class StateLayout extends FrameLayout {
             ((LayoutParams) layoutParams).mStateFlag = NO_NETWORK;
         }
         view.setLayoutParams(layoutParams);
+        view.setVisibility(View.GONE);
         this.mNoNetworkView = view;
+        this.addView(mNoNetworkView);
     }
 
     /**
@@ -167,8 +205,8 @@ public class StateLayout extends FrameLayout {
      *
      * @param resId
      */
-    public void setNoDataView(@LayoutRes int resId) {
-        setNoDataView(LayoutInflater.from(getContext()).inflate(resId, this, false));
+    public void setEmptyView(@LayoutRes int resId) {
+        setEmptyView(LayoutInflater.from(getContext()).inflate(resId, this, false));
     }
 
     /**
@@ -176,22 +214,23 @@ public class StateLayout extends FrameLayout {
      *
      * @param resId
      */
-    public void setNoDataViewById(@IdRes int resId) {
-        setNoDataView(findViewById(resId));
+    public void setEmptyViewById(@IdRes int resId) {
+        setEmptyView(findViewById(resId));
     }
 
-    public void setNoDataView(View view) {
+    public void setEmptyView(View view) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
         if (layoutParams != null && layoutParams instanceof LayoutParams) {
-            ((LayoutParams) layoutParams).mStateFlag = NO_DATA;
+            ((LayoutParams) layoutParams).mStateFlag = EMPTY;
         } else {
             layoutParams = new StateLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            ((LayoutParams) layoutParams).mStateFlag = NO_DATA;
+            ((LayoutParams) layoutParams).mStateFlag = EMPTY;
         }
         view.setLayoutParams(layoutParams);
-        this.mNoDataView = view;
+        view.setVisibility(View.GONE);
+        this.mEmptyView = view;
+        this.addView(mEmptyView);
     }
-
 
     /**
      * 设置错误视图，通过ID
@@ -227,7 +266,10 @@ public class StateLayout extends FrameLayout {
             ((LayoutParams) layoutParams).mStateFlag = ERROR;
         }
         view.setLayoutParams(layoutParams);
+        view.setVisibility(View.GONE);
         this.mErrorView = view;
+        this.addView(mErrorView);
+
     }
 
     /**
@@ -262,7 +304,9 @@ public class StateLayout extends FrameLayout {
             ((LayoutParams) layoutParams).mStateFlag = LOADING;
         }
         view.setLayoutParams(layoutParams);
+        view.setVisibility(View.GONE);
         this.mOnLoadingView = view;
+        this.addView(mOnLoadingView);
     }
 
     /**
@@ -297,7 +341,9 @@ public class StateLayout extends FrameLayout {
             ((LayoutParams) layoutParams).mStateFlag = SUCCESS;
         }
         view.setLayoutParams(layoutParams);
+        view.setVisibility(View.GONE);
         this.mSuccessView = view;
+        this.addView(mSuccessView);
     }
 
     /**
@@ -315,10 +361,12 @@ public class StateLayout extends FrameLayout {
 
         if (viewState != null && this.mState != newState) {
             viewState.clearAnimation();
+//            removeAllViews();
+            viewState.setVisibility(View.GONE);
         }
-        removeAllViews();
         newView.clearAnimation();
-        addView(newView);
+        //addView(newView);
+        newView.setVisibility(View.VISIBLE);
         this.mState = newState;
     }
 
@@ -354,8 +402,8 @@ public class StateLayout extends FrameLayout {
      */
     public View getViewByState(@LoadState int state) {
         switch (state) {
-            case NO_DATA:
-                return mNoDataView;
+            case EMPTY:
+                return mEmptyView;
             case LOADING:
                 return mOnLoadingView;
             case SUCCESS:

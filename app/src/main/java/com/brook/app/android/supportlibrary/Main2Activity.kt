@@ -1,6 +1,5 @@
 package com.brook.app.android.supportlibrary
 
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -10,12 +9,11 @@ import android.widget.Button
 import com.brook.app.android.view.StateLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
-
-class MainActivity : AppCompatActivity() {
+class Main2Activity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main2)
 
         val recyclerView = RecyclerView(this)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -28,10 +26,10 @@ class MainActivity : AppCompatActivity() {
         var button = view as Button
         when (button.text.toString()) {
             "成功" -> {
-                layout.setState(StateLayout.SUCCESS)
+                layout.setStateDelayed(StateLayout.SUCCESS, 2000)
             }
             "加载中" -> {
-                layout.setState(StateLayout.LOADING)
+                layout.setStateDelayed(StateLayout.LOADING, 2000)
             }
             "无网络" -> {
                 layout.setState(StateLayout.NO_NETWORK)
@@ -44,9 +42,5 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-    fun xml(view: View) {
-        startActivity(Intent(this, Main2Activity::class.java))
     }
 }
